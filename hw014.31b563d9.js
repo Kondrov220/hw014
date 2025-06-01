@@ -667,15 +667,61 @@ function hmrAccept(bundle /*: ParcelRequire */ , id /*: string */ ) {
 }
 
 },{}],"a0t4e":[function(require,module,exports,__globalThis) {
-var _pnotifyJs = require("@pnotify/core/dist/PNotify.js");
-var _pnotifyMobileJs = require("@pnotify/mobile/dist/PNotifyMobile.js");
+var _core = require("@pnotify/core");
+var _mobile = require("@pnotify/mobile");
 var _brightThemeCss = require("@pnotify/core/dist/BrightTheme.css");
-(0, _pnotifyJs.success)({
-    title: "\u041F\u0440\u0430\u0432\u0438\u043B\u044C\u043D\u043E",
-    delete: 50
+let data;
+fetch("https://restcountries.com/v3.1/all").then((res)=>res.json()).then((da)=>{
+    data = da;
+});
+document.querySelector("input").addEventListener("input", (e)=>{
+    let text = [];
+    data.map((country)=>country.name.common).forEach((name)=>{
+        if (name.toLowerCase().includes(e.target.value.toLowerCase())) text.push(name);
+    });
+    if (text.length <= 10 && text.length > 1) {
+        const array = [];
+        text.forEach((element)=>{
+            array.push(`<li>${element}</li>`);
+        });
+        document.querySelector("ul").innerHTML = array.join("");
+        document.querySelector(".x").innerHTML = "";
+    } else if (text.length === 1) {
+        const element = data.find((x)=>x.name.common === text[0]);
+        if (element.name.common == text[0]) {
+            const layaut = `<h1>${element.name.common}</h1>
+      <p>Capital:<span>${element.capital}</span></p>
+      <p>Population:<span>${element.population}</span></p>
+      <p>Languages:</p>
+      <ul class="y"></ul>
+      <img src="${element.flags.png}" alt="">`;
+            document.querySelector("ul").innerHTML = "";
+            document.querySelector(".x").innerHTML = layaut;
+            const array = [];
+            for(const key in element.languages){
+                const ele = element.languages[key];
+                array.push(`<li>${ele}</li>`);
+            }
+            document.querySelector(".y").innerHTML = array.join("");
+        }
+    } else if (text.length > 10) {
+        (0, _core.error)({
+            title: "\u041E \u043D\u0456!",
+            text: "\u0414\u0443\u0436\u0435 \u0431\u0430\u0433\u0430\u0442\u043E \u0441\u043F\u0456\u0432\u043F\u0430\u0434\u0456\u043D\u044C"
+        });
+        document.querySelector("ul").innerHTML = "";
+        document.querySelector(".x").innerHTML = "";
+    } else {
+        (0, _core.error)({
+            title: "\u041E \u043D\u0456!",
+            text: "\u0422\u0430\u043A\u043E\u0457 \u043A\u0440\u0430\u0457\u043D\u0438 \u043D\u0435\u043C\u0430\u0454"
+        });
+        document.querySelector("ul").innerHTML = "";
+        document.querySelector(".x").innerHTML = "";
+    }
 });
 
-},{"@pnotify/core/dist/PNotify.js":"fay4s","@pnotify/mobile/dist/PNotifyMobile.js":"5RXYV","@pnotify/core/dist/BrightTheme.css":"grIyt"}],"fay4s":[function(require,module,exports,__globalThis) {
+},{"@pnotify/core":"fay4s","@pnotify/mobile":"5RXYV","@pnotify/core/dist/BrightTheme.css":"grIyt"}],"fay4s":[function(require,module,exports,__globalThis) {
 var global = arguments[3];
 !function(t, e) {
     e(exports);
